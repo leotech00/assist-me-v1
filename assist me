@@ -1,0 +1,2334 @@
+user@DESKTOP-JGBAS9B MINGW64 ~/Downloads/ASSIST-ME-UI-Audit-20261118-143831
+$ echo "===== AUDIT FILE COUNT ====="
+find . -type f | wc -l
+
+echo "===== FILES COLLECTED ====="
+find . -type f | head -60
+
+echo "===== AUDIT README ====="
+cat AUDIT-README.txt
+===== AUDIT FILE COUNT =====
+21
+===== FILES COLLECTED =====
+./assets/design/ASSIST_ME_reference.png
+./AUDIT-README.txt
+./CMakeLists.txt
+./docs/ASSIST-ME-Blueprint-Revision-3.md
+./source/CMakeLists.txt
+./source/core/model/SampleInfo.h
+./source/core/services/IAssistantService.h
+./source/core/services/ILibraryService.h
+./source/core/services/MockLibraryService.cpp
+./source/core/services/MockLibraryService.h
+./source/plugin/PluginEditor.cpp
+./source/plugin/PluginEditor.h
+./source/plugin/PluginProcessor.cpp
+./source/plugin/PluginProcessor.h
+./source/plugin/PluginState.cpp
+./source/plugin/PluginState.h
+./source/ui/layout/DesignGrid.h
+./source/ui/theme/FontManager.cpp
+./source/ui/theme/FontManager.h
+./source/ui/theme/Tokens.h
+./tests/CMakeLists.txt
+===== AUDIT README =====
+ASSIST ME - UI AUDIT PACKAGE
+
+Purpose:
+Inspect the current plugin UI, layout, sample browser,
+assistant panel, macro controls and project architecture.
+
+This is a selected source-code copy.
+It does not contain the complete project, build output,
+Git history, installed plugin or backup folders.
+
+Original project:
+C:\Users\user\Downloads\ASSIST-ME
+
+user@DESKTOP-JGBAS9B MINGW64 ~/Downloads/ASSIST-ME-UI-Audit-20261118-143831
+$ ^C
+
+user@DESKTOP-JGBAS9B MINGW64 ~/Downloads/ASSIST-ME-UI-Audit-20261118-143831
+$ for file in \
+"docs/ASSIST-ME-Blueprint-Revision-3.md" \
+"source/ui/theme/Tokens.h" \
+"source/ui/layout/DesignGrid.h" \
+"source/plugin/PluginEditor.h" \
+"source/plugin/PluginEditor.cpp" \
+"source/ui/theme/FontManager.h" \
+"source/ui/theme/FontManager.cpp"
+do
+    echo ""
+    echo "========================================"
+    echo "FILE: $file"
+    echo "========================================"
+    cat "$file"
+done
+
+========================================
+FILE: docs/ASSIST-ME-Blueprint-Revision-3.md
+========================================
+# ASSIST ME by R3NOL MUSIC
+## Master Product & Development Blueprint — Revision 3
+
+**Document status:** Working master specification
+**Revision:** 3
+**Product:** ASSIST ME by R3NOL MUSIC
+**Repository:** `C:\Users\user\Downloads\ASSIST-ME`
+**Purpose:** Single source of truth for product scope, architecture, implementation status, roadmap, quality requirements and developer handoff.
+
+---
+
+## 1. Purpose and document authority
+
+This document consolidates the approved Revision 2 product specification with the actual state of the repository as verified on 18 November 2026.
+
+It serves two distinct purposes:
+
+1. **Product specification:** describes what ASSIST ME is intended to become and the behaviour, architecture, safety and quality requirements it must meet.
+2. **Implementation tracker:** records what is genuinely implemented, what has been tested, and what remains outstanding.
+
+A feature described in the product specification is not automatically implemented. Implementation status must be supported by source code, build output or a repeatable test. Do not describe planned, mocked or placeholder functionality as complete.
+
+The approved UI reference images remain the visual source of truth:
+- `assets/design/ASSIST_ME_reference.png`
+- `references/ASSIST-ME-UI-Reference.png`
+
+Where appearance conflicts with a written visual description, follow the approved reference image unless a later decision is explicitly recorded here.
+
+### Status vocabulary
+
+| Status | Meaning |
+|---|---|
+| **Complete** | Implemented and supported by the stated verification evidence. |
+| **In progress** | Work has started but acceptance criteria are not all met. |
+| **Pending** | Not yet implemented. |
+| **Blocked** | Cannot proceed until a named dependency or decision is resolved. |
+| **Planned** | Part of the product direction, but not part of the current implementation phase. |
+
+---
+
+## 2. Product vision and scope
+
+ASSIST ME is a professional music-production plugin intended to help producers discover, understand, organise, audition and use sounds, with an AI-assisted workflow that can eventually interpret natural-language requests and help users find suitable sounds and production starting points.
+
+The product should feel like a polished, native desktop music tool rather than a web page embedded in a plugin. It should be visually faithful to the approved dark interface reference, responsive to resizing, predictable inside a DAW, and safe under real-time audio constraints.
+
+### 2.1 Product principles
+
+1. **Producer-first workflow:** browsing, auditioning and moving sounds into a project should be straightforward.
+2. **Honest functionality:** never present mock data, offline AI, unavailable controls or unimplemented analysis as real functionality.
+3. **Native plugin experience:** use native JUCE components and established VST3 behaviour.
+4. **Real-time safety:** the audio callback must never perform blocking work.
+5. **Scalable library:** architecture must support large local collections without freezing the interface.
+6. **Secure AI integration:** provider secrets remain on the backend, never inside the plugin binary.
+7. **Modular implementation:** core services should be separable from the UI and reusable by a future instrument target.
+8. **Incremental delivery:** build, test and record one milestone at a time.
+
+### 2.2 Target platform and product targets
+
+- Initial platform: Windows 10/11, x64.
+- Primary plugin format: VST3.
+- Primary development and host-validation environment: FL Studio 21 Producer Edition.
+- Development convenience target: Standalone application.
+- Plugin role currently implemented: stereo audio effect with pass-through.
+- Future target: separate sampler/instrument plugin, sharing suitable core modules.
+
+The sampler/instrument target is a future product milestone. Do not assume the current effect plugin is a reliable MIDI instrument.
+
+---
+
+## 3. Verified repository and development environment
+
+The following describes the actual project state, not the original proposal.
+
+### 3.1 Environment
+
+| Item | Verified project value |
+|---|---|
+| Operating system | Windows x64 |
+| IDE/toolchain | Visual Studio 2026 / MSVC |
+| Build system | CMake |
+| Framework | JUCE 9.0.4 |
+| Plugin format | VST3 |
+| Development host | FL Studio 21 Producer Edition |
+| Project directory | `C:\Users\user\Downloads\ASSIST-ME` |
+| JUCE source | `C:\JUCE` |
+| VST3 installation | `C:\Program Files\Common Files\VST3\ASSIST ME.vst3` |
+| Plugin manufacturer code | `RnMu` |
+| Plugin ID/code | `AmE1` |
+| Startup editor size | 1280 × 720 |
+| Reference design canvas | 1672 × 941 |
+| Initial design ratio | Approximately 16:9 |
+
+**Important:** Do not silently change the plugin identity codes. They are already in use by the project and changing them can affect host recognition and saved projects.
+
+### 3.2 Relevant paths
+
+```text
+ASSIST-ME/
+├── CMakeLists.txt
+├── CMakePresets.json
+├── DEVELOPMENT_LOG.md
+├── .gitignore
+├── docs/
+│   ├── ASSIST-ME-Blueprint-Revision-2.md
+│   ├── fl-studio-test-matrix.md
+│   └── threading-rules.md
+├── assets/
+│   ├── design/
+│   │   └── ASSIST_ME_reference.png
+│   └── fonts/
+│       └── Inter/
+├── references/
+│   └── ASSIST-ME-UI-Reference.png
+├── source/
+│   ├── plugin/
+│   │   ├── PluginProcessor.h/.cpp
+│   │   └── PluginEditor.h/.cpp
+│   └── ui/
+│       ├── theme/
+│       │   ├── Tokens.h
+│       │   └── FontManager.h/.cpp
+│       └── layout/
+│           └── DesignGrid.h
+└── build/
+    └── vs2026-debug/
+```
+
+This is a high-level map, not a claim that every future directory or module already exists. Inspect the repository before relying on any additional path.
+
+### 3.3 Build outputs
+
+Expected VST3 build output:
+
+```text
+build\vs2026-debug\source\AssistMe_artefacts\Release\VST3\ASSIST ME.vst3
+```
+
+Standalone Debug output:
+
+```text
+build\vs2026-debug\source\AssistMe_artefacts\Debug\Standalone\ASSIST ME.exe
+```
+
+Installed VST3:
+
+```text
+C:\Program Files\Common Files\VST3\ASSIST ME.vst3
+```
+
+The installed plugin should only be replaced after a successful build. Close FL Studio before copying a new build into the system VST3 directory.
+
+### 3.4 Git history and working practices
+
+Verified commits:
+
+- `dc9a309` — `Milestone 1: Complete plugin foundation and Inter font integration`
+- `710dfd3` — `Ignore local backups and unused extracted fonts`
+
+The working tree was confirmed clean after these commits and before the Revision 3 documentation work.
+
+The `.gitignore` includes:
+
+```gitignore
+# Local backups and extracted font packages
+*.backup
+*.bak
+*.diagnostic-backup
+assets/fonts/Inter/extracted/
+```
+
+Do not remove or rewrite existing commits. Use new commits for future logical milestones. Before each substantial change, check `git status --short`. Never overwrite user work or unrelated files.
+
+---
+
+## 4. Implementation status — verified baseline
+
+### 4.1 Completed and tested
+
+The following items have been implemented and manually verified:
+
+- CMake-based JUCE project scaffold.
+- VST3 effect target and Standalone target.
+- Basic stereo audio pass-through.
+- Plugin editor with working resizing.
+- Startup editor size of 1280 × 720.
+- Theme token foundation at `source/ui/theme/Tokens.h`.
+- Font manager at `source/ui/theme/FontManager.h/.cpp`.
+- Design grid foundation at `source/ui/layout/DesignGrid.h`.
+- Inter v4.1 font files embedded in the project: Regular, Medium, SemiBold and Bold.
+- Inter licence file included.
+- Debug build succeeds.
+- Release build succeeds.
+- Five existing test groups pass in Debug and Release with zero reported failures.
+- Plugin loads in FL Studio 21.
+- UI layout renders in FL Studio.
+- Resizing works without the previously observed crash.
+- Audio pass-through works in the host test.
+- Closing and reopening the plugin is stable in the tested workflow.
+- Basic host compatibility checks completed.
+
+### 4.2 Test evidence already reported
+
+| Test | Result |
+|---|---|
+| CMake Debug build | Pass |
+| CMake Release build | Pass |
+| Existing Debug tests | Pass; five test groups, zero failures |
+| Existing Release tests | Pass; five test groups, zero failures |
+| FL Studio 21 plugin load | Pass |
+| Editor layout rendering | Pass |
+| Editor resizing | Pass |
+| Audio pass-through | Pass |
+| Close/reopen stability | Pass in tested workflow |
+
+These results are evidence for the current foundation only. They do not establish pluginval, Steinberg validator, drag-and-drop, library, AI, analysis or full UI acceptance.
+
+### 4.3 Not yet implemented or not yet verified
+
+The following must remain marked outstanding:
+
+- Full reference-matched interface.
+- Complete application of theme tokens to all components.
+- Top workspace tabs and left navigation views.
+- Four functional macro controls.
+- Pack/category panel and filters.
+- Sample browser with functional rows and scrolling.
+- Waveform rendering from real audio files.
+- Assistant panel and real conversation workflow.
+- Assistant panel collapse/reopen and browser reflow.
+- Persistent conversation model.
+- Local sample library indexing and search.
+- SQLite/FTS5 database.
+- Waveform generation and disk cache.
+- BPM, key and transient analysis.
+- AI backend integration.
+- Sample matching and recommendation engine.
+- Production tools and sampler engine.
+- Real sample drag-and-drop into FL Studio Playlist and Channel Rack.
+- pluginval verification.
+- Steinberg VST3 validator verification.
+- Installer and release packaging.
+- Public release readiness.
+
+**Milestone 1 is not complete according to the original broad scope.** The plugin foundation is complete; the full UI shell and the remaining original Milestone 1 items are still outstanding.
+
+---
+
+## 5. Product requirements and primary workflows
+
+### 5.1 Sound discovery workflow
+
+The intended user workflow:
+
+1. Open the SOUNDS workspace.
+2. Search the local sound collection.
+3. Narrow results using pack, category, type, genre, instrument, character, key and BPM filters.
+4. Preview a result.
+5. Inspect its metadata and waveform.
+6. Favourite or organise the sound.
+7. Drag the real audio file into the DAW.
+8. Optionally ask the assistant to find alternatives or sounds that fit a musical description.
+
+The initial browser must be useful with local files even when online services and AI are unavailable.
+
+### 5.2 Assistant workflow
+
+The intended future workflow:
+
+1. Open the Assistant panel.
+2. Enter a natural-language request, for example: “Find a dark vocal texture around 140 BPM.”
+3. The assistant interprets the request and translates it into supported search/filter operations.
+4. The user reviews recommendations and their metadata.
+5. The user auditions and selects a result.
+6. The user explicitly confirms any operation that changes project or plugin state.
+7. The assistant reports what it actually did.
+
+The assistant must not claim it has analysed the entire DAW project unless the plugin has actually received and analysed the relevant audio. A plugin inserted on a mixer track can only access audio routed through that plugin's input.
+
+### 5.3 Project and audio analysis workflow
+
+Future analysis may use:
+- Host-provided tempo and transport information where available.
+- Audio routed into the effect plugin.
+- User-imported audio files.
+- User-approved audio capture.
+
+It must not imply access to FL Studio's complete Playlist, all project tracks, project key or arbitrary project internals when those are not exposed by the host.
+
+### 5.4 Four macro controls
+
+The UI has exactly four macro controls. Each macro must have a clear label, value display, range and documented mapping when implemented. Do not add a fifth macro. The extra knob visible in the original reference was identified as an artefact and is excluded.
+
+### 5.5 Navigation and workspace requirements
+
+Top tabs are the primary workspaces. The left rail provides shortcuts and dedicated views. Both must use one shared navigation state.
+
+| Top workspace | Left-rail relationship |
+|---|---|
+| PRESETS | No dedicated rail shortcut |
+| WAVETABLES | No dedicated rail shortcut |
+| SOUNDS | Search shortcut |
+| GENERATE | Generate shortcut |
+| ENGINE | Engine shortcut |
+| EFFECTS | Effects shortcut |
+
+Rail-only destinations:
+
+- Play
+- Library
+
+Assistant is an independent panel toggle and does not change the active workspace.
+
+Exactly one primary workspace is active at a time. Choosing a rail shortcut must update the corresponding top tab. Choosing a top tab must update its matching rail shortcut. A rail-only view clears the top-tab highlight.
+
+---
+
+## 6. UI and visual design specification
+
+### 6.1 Visual direction
+
+- Dark graphite and charcoal surfaces.
+- Restrained orange accent for active states and important actions.
+- Off-white primary text and muted grey secondary text.
+- Thin, subtle borders and controlled corner radii.
+- Dense but legible professional plugin layout.
+- Native JUCE components; no WebView.
+- Inter typography using the embedded licensed font files.
+- Vector or procedurally drawn icons where practical.
+
+The supplied reference images govern visual appearance. Do not redesign the interface or introduce unrelated styling without approval.
+
+### 6.2 Main interface regions
+
+| Region | Planned component | Requirements |
+|---|---|---|
+| Header | `TopBar` | Branding, preset selector, save, settings, CPU/RAM indicators |
+| Workspace tabs | `MainTabBar` | PRESETS, WAVETABLES, SOUNDS, GENERATE, ENGINE, EFFECTS |
+| Left rail | `LeftNavRail` | Play, Engine, Effects, Search, Library, Generate, Assistant |
+| Macro column | `MacroColumn` | Exactly four macros |
+| Filter panel | `PackFilterPanel` | Packs/categories, search, type tiles and filter accordions |
+| Main content | `SampleBrowser` | Banner, project strip, sample rows and scrolling |
+| Sample row | `SampleRow` | Thumbnail, play, waveform, title, metadata, favourite and actions |
+| Transport | `TransportBar` | Preview progress, time and volume |
+| Assistant | `AssistantPanel` | Header, quick actions, transcript, results and input |
+
+### 6.3 Typography and assets
+
+Inter v4.1 is already embedded and has been tested in the plugin UI. Use the existing FontManager and font assets. Do not reintroduce the old unresolved font-selection step.
+
+- Preserve the font licence.
+- Use the correct font weight rather than simulating boldness where possible.
+- Use wide tracking for selected brand and tab labels where the reference calls for it.
+- Do not use cropped raster icons from the reference image as final assets.
+- Keep original brand artwork and logos replaceable without changing layout architecture.
+
+### 6.4 Design canvas and resizing
+
+| Property | Value |
+|---|---|
+| Reference canvas | 1672 × 941 design units |
+| Current editor startup | 1280 × 720 |
+| Intended minimum | Approximately 1002 × 564 |
+| Intended maximum | Approximately 200% of design canvas |
+| Intended ratio | 16:9 initially |
+
+The 1672 × 941 reference is the design coordinate system; it is not the current startup window size.
+
+Use `DesignGrid` to map design-space rectangles and dimensions to the actual editor size. Layout must be recomputed at each size; do not stretch a screenshot or bitmap to simulate a responsive UI.
+
+The aspect ratio should initially be constrained to approximately 16:9 through one central constrainer configuration. Keep this policy easy to relax later.
+
+Acceptance checks:
+- No sibling component overlap.
+- No controls clipped outside their parent.
+- Text truncates safely before colliding with icons.
+- All controls remain reachable at minimum size.
+- Test with the assistant open and closed.
+- Test at 60%, 100% and 200% design scale.
+- Host-driven resize requests use the same layout/constrainer rules.
+
+### 6.5 Assistant panel collapse and state
+
+When collapsed:
+- The panel is not painted.
+- The panel is not focusable.
+- The panel consumes no layout width.
+- The browser expands into the freed space.
+- The left-rail Assistant toggle remains visible and reflects the panel state.
+
+Conversation history must be owned by a model that outlives the panel component. Collapsing and reopening the panel must not erase the current conversation. Persisting history across full plugin/DAW sessions is a later milestone.
+
+### 6.6 Mock-data honesty
+
+Until real services exist:
+- Mock classes and fixtures must be clearly named.
+- Any visible mock-data state must be labelled.
+- Do not show fake analysis, fake AI responses, fake download progress or fake indexing progress.
+- Unavailable controls must show a clear “Not available in this build” or equivalent notice.
+- Static example conversations must be labelled as examples.
+- Do not claim “AI Ready” while the AI service is offline.
+
+---
+
+## 7. Architecture and engineering rules
+
+### 7.1 Technology baseline
+
+- C++20.
+- JUCE 9.0.4 in the current working environment.
+- CMake.
+- Visual Studio 2026 / MSVC x64.
+- VST3 effect and Standalone targets.
+- Native JUCE Components.
+- Existing Inter font assets and FontManager.
+
+The original Revision 2 references to JUCE 8, Visual Studio 2022 and VS2022 CMake presets are historical and must not be copied into new implementation instructions unless the project is deliberately migrated.
+
+### 7.2 Architectural boundaries
+
+Target separation:
+
+- `core/`: models, algorithms, service interfaces and thread-safe data structures. No GUI dependency.
+- `plugin/`: JUCE AudioProcessor, plugin state and host integration.
+- `ui/`: components, theme, layout, navigation and interaction.
+- `services/`: library, preview, waveform, analysis, assistant and drag services, implemented behind clear interfaces.
+- `tests/`: unit and integration tests.
+- `assets/`: fonts, icons, reference art and fixtures.
+- `docs/`: specifications, test records and developer instructions.
+
+The UI must not query SQLite directly or perform disk scans. It should consume immutable results supplied by service interfaces.
+
+### 7.3 Threading contract
+
+This contract is mandatory.
+
+| Thread | Allowed | Forbidden |
+|---|---|---|
+| Audio callback (`processBlock`) | Read atomics, use preallocated buffers, push/pop lock-free queues, mix prepared preview audio | Allocation, mutexes, file/network I/O, logging, blocking waits, GUI calls |
+| Message/UI thread | Paint components, process user input, apply completed worker results | Blocking I/O, audio decoding, database queries, network waits |
+| Worker threads | File scanning, audio decoding, waveform generation, database queries and analysis | Directly accessing or mutating UI components |
+| Network thread | HTTPS requests and streaming responses to/from backend | Any work on the audio callback |
+
+Communication mechanisms may include atomics, lock-free FIFOs, `juce::AbstractFifo`, `AsyncUpdater` and safe message-thread dispatch. Worker results must be marshalled to the UI thread before updating components.
+
+The audio thread must not wait for a worker, lock a mutex or allocate memory. Preview data must be decoded and prepared off-thread, then transferred using a real-time-safe handoff.
+
+### 7.4 Plugin state
+
+Use versioned state serialization. Persist only data that belongs in plugin state, such as:
+- User parameter values.
+- Selected workspace and relevant UI state.
+- Assistant panel open/closed state.
+- User-approved plugin preferences.
+
+Do not store provider API secrets in plugin state, presets or project files. Large library databases and waveform caches belong in the application data directory, not inside the DAW project or VST3 bundle.
+
+### 7.5 Plugin identity
+
+Keep the current codes stable:
+- Plugin ID/code: `AmE1`
+- Manufacturer code: `RnMu`
+
+Do not change these values without a deliberate migration/release decision.
+
+---
+
+## 8. Sample library, search and indexing — planned
+
+**Status: Pending.** The database, scanner and real library search are not part of the verified implementation baseline.
+
+### 8.1 Intended design
+
+Use SQLite with FTS5 for local metadata and text search, subject to a licensing and build integration review.
+
+Proposed layers:
+
+`SampleListModel` → `ILibraryService` → worker-backed `LibraryService` → SQLite database.
+
+The UI receives immutable result pages. It does not run SQL or scan directories.
+
+### 8.2 Indexing
+
+- User chooses one or more folders.
+- Scanner reads supported audio file metadata on worker threads.
+- Initial indexing records path, file size, modification time, duration, sample rate and channel count.
+- Indexing is cancellable and resumable.
+- Writes occur in batches.
+- Incremental scans compare path, size and modification time.
+- Missing files are marked unavailable rather than immediately deleting all historical metadata.
+- BPM/key analysis is a separate queue and must not delay basic indexing.
+
+### 8.3 Proposed data model
+
+Potential tables:
+- `samples`
+- `packs`
+- `tags`
+- `sample_tags`
+- `licences`
+- FTS5 virtual table for searchable names, tags and pack metadata.
+
+Potential sample fields include ID, path, content hash, pack ID, type, duration, sample rate, BPM, key, favourite state and licence reference.
+
+Schema must be versioned and migrated safely. Final schema should be designed when implementation begins, not treated as already present.
+
+### 8.4 Large-library performance
+
+Target architecture should support 500,000 or more indexed samples.
+
+- Paginated database queries.
+- Indexed filter columns.
+- Virtualised sample rows.
+- Recycle visible row components.
+- Fetch pages ahead of scroll position.
+- Discard stale query results using a generation/request ID.
+- Do not instantiate a component for every sample in the database.
+
+### 8.5 Database location and multiple instances
+
+Proposed data location:
+
+`%LOCALAPPDATA%\R3NOL\ASSIST ME\`
+
+Use an appropriate shared service/lifetime strategy so multiple plugin instances do not each perform a full scan. Database concurrency and shutdown behaviour must be tested before enabling multiple instances.
+
+---
+
+## 9. Preview, waveforms and audio analysis — planned
+
+**Status: Pending.**
+
+### 9.1 Audio preview
+
+- Decode files on worker threads.
+- Prepare preview buffers before audio playback.
+- Transfer prepared data to the audio thread using a real-time-safe handoff.
+- Route preview through the plugin output bus.
+- Do not open a separate audio device inside a DAW host.
+- Handle stop, seek, replacement and plugin shutdown safely.
+
+### 9.2 Waveform generation
+
+- Decode source audio off the UI thread.
+- Generate min/max peak data at multiple resolutions.
+- Cache peak data on disk using a stable file identity/hash.
+- Draw waveforms using JUCE paths or an equivalent efficient representation.
+- Prioritise visible rows.
+- Cancel or deprioritise work for rows that are no longer visible.
+- Rebuild missing or corrupt cache entries safely.
+
+Proposed cache location:
+
+`%LOCALAPPDATA%\R3NOL\ASSIST ME\waveforms\`
+
+Use a bounded cache with an eviction strategy. This is a design proposal, not an implemented directory or cache.
+
+### 9.3 BPM, key and transient analysis
+
+Before selecting a library, evaluate:
+- Commercial-use licensing.
+- Accuracy on loops, one-shots and noisy material.
+- CPU and memory use.
+- Offline performance.
+- Threading requirements.
+- Redistribution terms.
+
+Some popular analysis libraries use GPL/AGPL licensing. Do not link a copyleft library into a closed-source commercial product without legal review and an appropriate commercial licence.
+
+The UI must distinguish:
+- Host-provided tempo.
+- Analysed file tempo.
+- Analysed key.
+- User-entered metadata.
+- Unknown/unavailable values.
+
+Never fabricate a key or BPM value.
+
+---
+
+## 10. AI assistant and backend security — planned
+
+**Status: Pending. No real AI integration is verified.**
+
+### 10.1 Backend architecture
+
+The plugin should communicate with an ASSIST ME backend controlled by R3NOL MUSIC. The backend communicates with selected AI providers.
+
+The plugin must not call a provider directly using a secret embedded in the binary.
+
+Backend responsibilities may include:
+- Authentication and session management.
+- Provider API key protection.
+- Rate limiting and abuse prevention.
+- Model/provider routing.
+- Request validation.
+- Usage and billing controls.
+- Logging with privacy safeguards.
+- Response streaming.
+- Versioned API contracts.
+
+### 10.2 Security requirements
+
+- Never embed provider API keys in the plugin.
+- Use HTTPS with certificate validation.
+- Keep network requests off the audio and UI threads.
+- Use timeouts, cancellation and bounded response sizes.
+- Store only an appropriate user session credential locally.
+- Protect Windows credentials using DPAPI/Credential Manager or an equivalent secure facility.
+- Do not write credentials into presets, logs or plain-text settings.
+- Validate all backend responses before applying actions.
+
+### 10.3 User consent and audio privacy
+
+Captured DAW audio is user content. Any upload must be explicit, opt-in and clearly disclosed. The product must explain what is uploaded, why, where it is processed, retention expectations and how the user can opt out.
+
+### 10.4 Assistant action safety
+
+The assistant may suggest actions, filters or sounds. Any operation with material project impact must be shown clearly and require user confirmation. The assistant must report only actions that the plugin confirms actually occurred.
+
+---
+
+## 11. Drag-and-drop and FL Studio compatibility — planned
+
+**Status: Pending. Real drag-and-drop into FL Studio has not been verified.**
+
+### 11.1 Intended implementation
+
+Use one central `DragService` entry point, such as `beginDrag(SampleId)`. UI rows and drag handles should not implement separate drag logic.
+
+- Dragging a row and dragging its handle should resolve to the same sample ID.
+- Use a real audio file path.
+- For generated or remote files, first materialise the file in a managed local cache.
+- Distinguish a click from a drag using a small movement threshold.
+- Preserve access to row controls and overflow menus.
+
+JUCE's external file drag API is the proposed starting point. Verify its exact behaviour in the target FL Studio versions before committing to the final UX.
+
+### 11.2 Required host tests
+
+Test:
+- FL Studio Playlist.
+- FL Studio Channel Rack.
+- Selected and unselected rows.
+- Dedicated drag handle.
+- Whole-row drag.
+- Multiple sample rows.
+- Repeated drag operations.
+- Plugin open/close and multiple instances.
+- Current supported FL Studio release and any older version explicitly included in the support policy.
+
+Record results in `docs/fl-studio-test-matrix.md`.
+
+### 11.3 Fallbacks
+
+If a host rejects or mishandles external drag:
+- Reveal in Explorer.
+- Copy file path.
+- Provide a clear explanation rather than pretending the drag succeeded.
+
+---
+
+## 12. Development roadmap and milestone acceptance
+
+The project should proceed in the following order. Do not skip ahead to AI or advanced analysis while the core browser and audio workflows are not stable.
+
+### Phase 1 — Foundation and build system
+
+**Status: Complete for the verified foundation scope.**
+
+Delivered:
+- JUCE/CMake project scaffold.
+- VST3 effect and Standalone targets.
+- Audio pass-through.
+- Resizable editor foundation.
+- Theme tokens, FontManager, DesignGrid foundation.
+- Embedded Inter font files and licence.
+- Debug/Release builds.
+- Existing tests passing.
+- Initial FL Studio load, resize, pass-through and stability checks.
+
+Remaining caveat: this does not mean the original full Milestone 1 UI-shell scope is complete.
+
+### Phase 2 — Complete UI shell and reference fidelity
+
+**Status: Pending / next major implementation phase.**
+
+Tasks:
+1. Inspect current `PluginEditor` and theme implementation before editing.
+2. Establish the root component hierarchy.
+3. Apply theme tokens and FontManager consistently.
+4. Implement header and workspace tab strip.
+5. Implement left navigation rail.
+6. Implement exactly four macro placeholders/controls.
+7. Implement filter panel layout.
+8. Implement banner and project status strip.
+9. Implement sample list and row visuals using clearly labelled fixtures.
+10. Implement transport layout.
+11. Implement assistant panel layout.
+12. Implement assistant collapse and browser reflow.
+13. Implement navigation state synchronisation.
+14. Add visual comparison screenshots at reference and resized dimensions.
+
+Acceptance:
+- Interface regions match the approved reference closely.
+- Inter fonts render consistently.
+- Exactly four macros appear.
+- Navigation state stays synchronised.
+- Assistant panel disappears completely when collapsed.
+- Browser reflows without overlap.
+- Mock content is visibly identified.
+- Debug and Release builds pass.
+- Existing tests remain green.
+- FL Studio load/resize/close/reopen smoke tests pass.
+
+### Phase 3 — Core models and sample browser interaction
+
+**Status: Pending.**
+
+Tasks:
+1. Define sample, pack, filter and navigation models.
+2. Define service interfaces.
+3. Implement fixture-backed sample results.
+4. Implement search input and filter-state handling.
+5. Implement list selection, scrolling and favourite state.
+6. Add paginated/virtualised list architecture.
+7. Add clear loading, empty and error states.
+
+Acceptance:
+- UI is driven by models rather than hard-coded component state.
+- Search and filters update visible fixture results predictably.
+- Large synthetic result sets do not create one component per item.
+- UI remains responsive.
+- No real indexing is claimed yet.
+
+### Phase 4 — Local library indexing and persistence
+
+**Status: Pending.**
+
+Tasks:
+1. Select and integrate SQLite/FTS5 after licence/build review.
+2. Design schema and migrations.
+3. Implement folder selection and scanner.
+4. Read metadata on worker threads.
+5. Add cancellation, resumability and incremental scanning.
+6. Implement paginated search.
+7. Add database lifecycle and multi-instance handling.
+8. Add tests for corrupt, missing, moved and duplicate files.
+
+Acceptance:
+- User-selected folders can be indexed.
+- UI remains responsive during indexing and queries.
+- Search and filters return real indexed files.
+- Database survives restart and migrates safely.
+- No database or file I/O occurs on audio callback or message thread.
+
+### Phase 5 — Preview and waveform pipeline
+
+**Status: Pending.**
+
+Tasks:
+1. Implement worker-side audio decoding.
+2. Design prepared preview-buffer handoff.
+3. Implement start, stop and seek.
+4. Route preview through plugin output.
+5. Generate multi-resolution waveform peaks.
+6. Implement disk cache and eviction.
+7. Render waveforms efficiently in visible rows.
+8. Stress-test playback while browsing and resizing.
+
+Acceptance:
+- Real samples audition reliably.
+- No audio callback blocking or allocation.
+- Preview stops cleanly on replacement, stop and shutdown.
+- Waveforms match source files.
+- Cache corruption/missing files recover safely.
+
+### Phase 6 — Audio analysis
+
+**Status: Pending.**
+
+Tasks:
+1. Evaluate licensing and select BPM/key analysis approach.
+2. Implement analysis queue and worker execution.
+3. Store results with provenance/confidence where appropriate.
+4. Add transient/onset analysis if required.
+5. Distinguish host tempo from file analysis.
+6. Expose results to filters and assistant context.
+
+Acceptance:
+- Analysis is reproducible and tested against a labelled fixture set.
+- Unknown/low-confidence results are handled honestly.
+- UI remains responsive.
+- Licensing is approved before redistribution.
+
+### Phase 7 — AI backend and assistant
+
+**Status: Pending.**
+
+Tasks:
+1. Define backend API contract.
+2. Implement secure authentication/session handling.
+3. Build network service off the UI/audio threads.
+4. Add conversation model and history lifecycle.
+5. Implement streaming responses if justified.
+6. Convert supported natural-language requests into structured search/filter intents.
+7. Add confirmation for consequential actions.
+8. Add timeout, cancellation, offline and error states.
+9. Document privacy and consent.
+
+Acceptance:
+- No provider secret exists in plugin binary.
+- Backend calls are secure and cancellable.
+- Offline state is clear.
+- Assistant never fabricates search results or completed actions.
+- User content is not uploaded without explicit consent.
+
+### Phase 8 — Production tools, macros and sampler direction
+
+**Status: Planned.**
+
+Tasks:
+1. Define the four macro mappings and parameter ranges.
+2. Implement parameter automation/state integration.
+3. Evaluate production tools based on actual user workflows.
+4. Prototype sampler/granular engine in an isolated module.
+5. Decide instrument plugin architecture and MIDI support.
+6. Share core services without coupling the instrument to effect-only assumptions.
+
+Acceptance:
+- Four macros have documented, testable mappings.
+- Parameters automate and restore correctly.
+- DSP is tested independently.
+- No unsafe MIDI/audio-thread behaviour.
+- Instrument target is a deliberate separate milestone.
+
+### Phase 9 — Advanced intelligence and integrations
+
+**Status: Planned.**
+
+Potential scope:
+- Similar-sound matching.
+- Semantic search.
+- Online catalogue.
+- Generated sample workflows.
+- User pack management and licence metadata.
+- More advanced analysis and recommendations.
+
+Each feature requires a separate specification, cost/latency assessment, privacy review and licensing review. Do not add all advanced features at once.
+
+### Phase 10 — QA, packaging and release
+
+**Status: Pending.**
+
+Tasks:
+1. Run full unit and integration suite.
+2. Run pluginval at agreed strictness levels.
+3. Run Steinberg VST3 validator.
+4. Complete FL Studio host matrix.
+5. Test multiple instances, project save/reload and shutdown.
+6. Test DPI and display scaling.
+7. Test clean install/uninstall.
+8. Prepare installer and release notes.
+9. Archive symbols and build provenance.
+10. Review licensing, privacy policy and third-party notices.
+11. Sign binaries where appropriate.
+12. Produce a release candidate and obtain user approval.
+
+Acceptance:
+- No known critical crash, audio corruption or data-loss issue.
+- Validator and host results are recorded.
+- Installer works on a clean supported Windows environment.
+- All shipped dependencies and assets have cleared licence review.
+- Release notes accurately describe included features and limitations.
+
+---
+
+## 13. Testing and quality strategy
+
+### 13.1 Every-change workflow
+
+For each implementation task:
+
+1. Inspect the relevant source and current Git state.
+2. State the intended change and files expected to change.
+3. Make the smallest coherent implementation.
+4. Build the relevant configuration.
+5. Run relevant tests.
+6. Perform host testing when plugin behaviour is affected.
+7. Review the diff.
+8. Record outcome and remaining issues.
+9. Commit only after verification and user approval of the checkpoint.
+
+Do not combine unrelated refactors with feature work.
+
+### 13.2 Build and test commands
+
+Use the project's existing CMake build directory and targets. Before using a command, verify it matches the current repository configuration.
+
+Known successful build pattern:
+
+```powershell
+cmake --build .\build\vs2026-debug --config Debug --parallel 4
+cmake --build .\build\vs2026-debug --config Release --parallel 4
+```
+
+Known test discovery pattern:
+
+```powershell
+ctest --test-dir .\build\vs2026-debug -C Debug -N
+```
+
+Run tests with:
+
+```powershell
+ctest --test-dir .\build\vs2026-debug -C Debug --output-on-failure
+```
+
+Do not claim pluginval or Steinberg validation has passed until the tools have actually been run and results recorded.
+
+### 13.3 Host test matrix
+
+Maintain `docs/fl-studio-test-matrix.md`. At minimum, cover:
+- Plugin discovery and load.
+- Audio pass-through.
+- Editor open/close.
+- Repeated open/close.
+- Resizing.
+- Project save/reload.
+- Multiple instances.
+- Sample-rate and buffer-size changes.
+- High-DPI display.
+- Preview playback when implemented.
+- Playlist and Channel Rack drag/drop when implemented.
+- Host shutdown while background work is active.
+
+### 13.4 Performance and stability
+
+Measure rather than guess:
+- UI responsiveness with large result sets.
+- CPU use during preview and analysis.
+- Memory growth during long sessions.
+- Indexing throughput.
+- Database query latency.
+- Waveform cache size and hit rate.
+- Assistant/network timeout behaviour.
+
+---
+
+## 14. Dependencies, licensing, privacy and release obligations
+
+### 14.1 JUCE
+
+The project currently uses JUCE 9.0.4. JUCE is dual-licensed; commercial closed-source distribution requires confirming and obtaining the appropriate licence. Verify current terms directly with JUCE before release.
+
+### 14.2 Fonts and visual assets
+
+Inter font files and the corresponding licence are included in the repository. Preserve the licence and verify that all additional fonts, icons, artwork and sample fixtures may be redistributed in the intended product.
+
+### 14.3 Audio analysis and DSP dependencies
+
+Do not add a third-party library until:
+- Its licence has been reviewed for the intended commercial distribution.
+- Its binary redistribution terms are understood.
+- Its platform and compiler compatibility are confirmed.
+- Its CPU and memory impact are tested.
+
+GPL/AGPL dependencies require particular care for a closed-source commercial plugin.
+
+### 14.4 Sample rights
+
+For local user-owned files, preserve the user's original file and metadata. For online or generated content, track source and licence/usage restrictions. Do not imply that a sample is royalty-free or commercially cleared unless the source licence supports that claim.
+
+### 14.5 Privacy
+
+Any audio upload, account telemetry or cloud processing requires clear disclosure and appropriate user consent. Keep credentials out of logs and project files. Define retention and deletion policies before backend release.
+
+### 14.6 Distribution
+
+Before public distribution:
+- Confirm JUCE and all dependency licences.
+- Prepare third-party notices.
+- Consider code signing.
+- Build a reliable installer/uninstaller.
+- Test on a clean Windows machine.
+- Document supported Windows and DAW versions.
+- Archive release symbols and exact build information.
+
+---
+
+## 15. Risks and mitigations
+
+| Risk | Severity | Mitigation |
+|---|---|---|
+| External drag/drop behaves differently across FL Studio targets | High | Early proof of concept; test Playlist and Channel Rack separately; maintain fallback actions |
+| Plugin only sees audio routed through its input | High | Explain track-level capture; require master insertion or file import for broader analysis |
+| Host tempo does not provide musical key | Medium | Analyse audio or accept user metadata; never infer unsupported project data |
+| Effect plugin is not a reliable MIDI instrument | Medium | Separate sampler/instrument target |
+| Host resize behaviour varies | Medium | Central constrainer and repeated host testing |
+| DPI/multi-monitor rendering issues | Medium | Test 100%, 125%, 150%, 200% and mixed-DPI displays |
+| Real-time thread violation | High | Strict callback contract, code review and stress tests |
+| Third-party analysis library licence conflict | High | Licence review before integration |
+| Sample rights and generated-content restrictions | High | Track source/licence metadata and review provider terms |
+| Uploading DAW audio without informed consent | High | Explicit opt-in, disclosure and privacy policy |
+| Plugin identity/state changes break sessions | High | Preserve `AmE1` / `RnMu`; version state |
+| Unsigned binaries trigger trust warnings | Medium | Evaluate code signing before public distribution |
+| Visual effects reduce performance | Low/Medium | Cache static assets and avoid expensive per-frame effects |
+| Kiro interruptions or limited credits slow development | Medium | Use Kiro only for bounded tasks; use local PowerShell, CMake and direct source review for routine work |
+
+---
+
+## 16. Current progress tracker
+
+| Workstream | Status | Evidence / next action |
+|---|---|---|
+| Repository and build scaffold | Complete | Debug and Release builds succeeded |
+| VST3 effect and Standalone targets | Complete | Targets build |
+| Audio pass-through | Complete | Tested in FL Studio 21 |
+| Resizable editor foundation | Complete | Resize test passed |
+| Theme token foundation | Complete | `Tokens.h` exists |
+| Font integration | Complete | Inter v4.1 embedded and rendered |
+| Design grid foundation | Complete | `DesignGrid.h` exists |
+| Full UI shell | Pending | Build Phase 2 |
+| Navigation and workspace views | Pending | Build Phase 2 |
+| Four macro controls | Pending | Build Phase 2 / Phase 8 |
+| Sample browser interactions | Pending | Phase 3 |
+| Local indexing and database | Pending | Phase 4 |
+| Audio preview | Pending | Phase 5 |
+| Waveform cache | Pending | Phase 5 |
+| BPM/key/transient analysis | Pending | Phase 6 |
+| AI assistant/backend | Pending | Phase 7 |
+| Sampler/instrument | Planned | Phase 8 |
+| Real FL Studio drag/drop | Pending | Early proof of concept, then Phase 10 acceptance |
+| pluginval / Steinberg validation | Pending | Phase 10 |
+| Installer and release | Pending | Phase 10 |
+
+---
+
+## 17. Developer handoff and operating rules
+
+### 17.1 Source-of-truth rules
+
+- This Revision 3 document is the master product and development blueprint.
+- `docs/threading-rules.md` remains the detailed thread-safety reference and must be kept consistent with Section 7.3.
+- `docs/fl-studio-test-matrix.md` remains the detailed host-test record.
+- The approved reference images govern appearance.
+- `DEVELOPMENT_LOG.md` records actual completed work, decisions and test evidence.
+- If a decision changes, update this blueprint and the relevant detailed document.
+
+### 17.2 Kiro usage
+
+Kiro is an optional coding assistant, not the authority on project state. It must inspect the actual repository before proposing edits.
+
+Because the user is on Kiro's limited free allowance:
+- Use Kiro for bounded implementation tasks that benefit from codebase-aware assistance.
+- Avoid asking it to repeatedly regenerate large plans or inspect the same files.
+- Do not spend credits on routine PowerShell, CMake or Git commands.
+- If its connection fails, continue locally where safe.
+- Never accept a large code change without reviewing the diff and building/testing it.
+
+### 17.3 Required response format for implementation work
+
+Before changing code, provide:
+1. Current step and objective.
+2. Exact files expected to change.
+3. One concise explanation of the implementation.
+4. Exact commands to run, preferably batched when safe.
+
+After changes, report:
+1. Files changed.
+2. Build result.
+3. Test result.
+4. Host test required or completed.
+5. Any known limitation.
+6. Git status and whether a commit is appropriate.
+
+Keep instructions direct and avoid unnecessary back-and-forth. Do not ask the user to repeat information already recorded here.
+
+### 17.4 Non-negotiable safeguards
+
+- Do not overwrite existing work.
+- Do not change plugin identity codes casually.
+- Do not claim a feature is implemented because a mock UI exists.
+- Do not perform blocking work on the audio callback.
+- Do not perform blocking I/O on the message thread.
+- Do not put provider secrets in the plugin.
+- Do not upload audio without explicit user consent.
+- Do not add dependencies without checking licence and build impact.
+- Do not move to the next milestone until the current acceptance criteria and evidence are reviewed.
+
+---
+
+## 18. Revision 3 change record
+
+Revision 3 updates the original Revision 2 specification to reflect the real repository and a complete product roadmap.
+
+Key corrections:
+- JUCE 8 → JUCE 9.0.4.
+- Visual Studio 2022/MSVC 2022 → Visual Studio 2026/MSVC.
+- Old VS2022 preset naming → current `vs2026-debug` build directory.
+- Proposed Inter font → embedded Inter v4.1, verified rendering and licence inclusion.
+- Proposed 1672 × 941 default editor → actual 1280 × 720 startup; 1672 × 941 remains the design canvas.
+- Original broad Milestone 1 claim → foundation complete, full UI shell and remaining functionality still pending.
+- Added verified build, test and FL Studio evidence.
+- Added explicit ten-phase roadmap from UI completion through release.
+- Added current Git checkpoints and working-tree discipline.
+- Clarified that SQLite, indexing, waveform caching, analysis, AI, sampler and drag/drop are planned, not completed.
+
+**End of Revision 3 master blueprint.**
+
+========================================
+FILE: source/ui/theme/Tokens.h
+========================================
+#pragma once
+
+// ============================================================
+// Tokens.h
+// Single source of truth for all design tokens.
+// Values are sampled from the approved UI reference image
+// (assets/design/ASSIST_ME_reference.png) in design-space
+// units (1672 x 941).
+//
+// All UI code reads from this file. Never hard-code colours,
+// sizes or font weights elsewhere.
+// ============================================================
+
+#include <juce_gui_basics/juce_gui_basics.h>
+
+namespace assistme
+{
+
+// ============================================================
+// Colour palette
+// ============================================================
+namespace Colours
+{
+    // Surfaces
+    inline constexpr juce::uint32 Background       = 0xFF1A1A1A; // charcoal/near-black background
+    inline constexpr juce::uint32 SurfaceRaised    = 0xFF242424; // slightly elevated panels
+    inline constexpr juce::uint32 SurfaceSunken    = 0xFF141414; // recessed areas / input fields
+    inline constexpr juce::uint32 SurfaceOverlay   = 0xFF2C2C2C; // hover overlay
+
+    // Borders
+    inline constexpr juce::uint32 Border           = 0xFF333333; // standard panel border
+    inline constexpr juce::uint32 BorderSubtle     = 0xFF292929; // very subtle separator
+
+    // Orange accent (primary interactive)
+    inline constexpr juce::uint32 Accent           = 0xFFE07A30; // orange â€” primary accent
+    inline constexpr juce::uint32 AccentDim        = 0xFF7A4318; // dimmed orange for inactive states
+    inline constexpr juce::uint32 AccentGlow       = 0x40E07A30; // translucent glow (alpha 0.25)
+
+    // Text
+    inline constexpr juce::uint32 TextPrimary      = 0xFFE8E8E8; // off-white primary text
+    inline constexpr juce::uint32 TextSecondary    = 0xFF888888; // muted secondary text
+    inline constexpr juce::uint32 TextTertiary     = 0xFF555555; // very muted / placeholder
+    inline constexpr juce::uint32 TextAccent       = 0xFFE07A30; // orange text (labels, highlights)
+    inline constexpr juce::uint32 TextOnAccent      = 0xFFFFFFFF; // text on orange background
+
+    // State colours
+    inline constexpr juce::uint32 Selected         = 0xFF2A2A2A; // row / item selected background
+    inline constexpr juce::uint32 Hover            = 0xFF232323; // row / item hover background
+    inline constexpr juce::uint32 Focus            = 0xFFE07A30; // keyboard focus ring colour
+
+    // Status
+    inline constexpr juce::uint32 StatusOffline    = 0xFF666666;
+    inline constexpr juce::uint32 StatusOnline     = 0xFF4CAF50;
+    inline constexpr juce::uint32 StatusWarning    = 0xFFFFC107;
+
+    // Mock badge (developer mode only)
+    inline constexpr juce::uint32 MockBadgeBg      = 0x80000000;
+    inline constexpr juce::uint32 MockBadgeText    = 0xFFE07A30;
+
+    // Helper to construct juce::Colour from these uint32 ARGB values
+    inline juce::Colour fromToken(juce::uint32 argb) { return juce::Colour(argb); }
+}
+
+// ============================================================
+// Spacing (design units at 1672 x 941 canvas)
+// ============================================================
+namespace Spacing
+{
+    inline constexpr int xxs = 2;
+    inline constexpr int xs  = 4;
+    inline constexpr int sm  = 8;
+    inline constexpr int md  = 12;
+    inline constexpr int lg  = 16;
+    inline constexpr int xl  = 24;
+    inline constexpr int xxl = 32;
+}
+
+// ============================================================
+// Border radius (design units)
+// ============================================================
+namespace Radius
+{
+    inline constexpr float xs  = 2.0f;
+    inline constexpr float sm  = 4.0f;
+    inline constexpr float md  = 6.0f;
+    inline constexpr float lg  = 8.0f;
+    inline constexpr float pill = 999.0f; // fully rounded
+}
+
+// ============================================================
+// Border widths (design units)
+// ============================================================
+namespace Stroke
+{
+    inline constexpr float thin   = 1.0f;
+    inline constexpr float normal = 1.5f;
+    inline constexpr float thick  = 2.0f;
+}
+
+// ============================================================
+// Layout â€” reference dimensions and region widths
+// Design canvas: 1672 x 941 px
+// ============================================================
+namespace Layout
+{
+    inline constexpr int DesignWidth  = 1672;
+    inline constexpr int DesignHeight = 941;
+
+    // Minimum and maximum editor sizes
+    inline constexpr int MinWidth     = 1002;
+    inline constexpr int MinHeight    = 564;
+    inline constexpr int MaxWidth     = 3344;
+    inline constexpr int MaxHeight    = 1882;
+
+    // Top bar height (px in design space)
+    inline constexpr int TopBarHeight = 48;
+
+    // Tab bar height
+    inline constexpr int TabBarHeight = 36;
+
+    // Left navigation rail width
+    inline constexpr int LeftNavWidth = 116;
+
+    // Macro column width (below left nav rail)
+    inline constexpr int MacroColumnWidth = 56;
+
+    // Pack filter panel width
+    inline constexpr int FilterPanelWidth = 220;
+
+    // AI assistant panel width (when open)
+    inline constexpr int AssistantPanelWidth = 340;
+
+    // Sample row height
+    inline constexpr int SampleRowHeight = 44;
+
+    // Transport bar height
+    inline constexpr int TransportBarHeight = 36;
+}
+
+// ============================================================
+// Typography â€” font sizes (design units)
+// Font family: Inter (SIL OFL). Loaded at runtime from assets/fonts/.
+// Falls back to default sans-serif if not available.
+// ============================================================
+namespace FontSize
+{
+    inline constexpr float xs  = 10.0f;
+    inline constexpr float sm  = 11.0f;
+    inline constexpr float md  = 12.0f;  // body default
+    inline constexpr float lg  = 14.0f;
+    inline constexpr float xl  = 16.0f;
+    inline constexpr float xxl = 20.0f;
+    inline constexpr float h3  = 24.0f;
+    inline constexpr float h2  = 28.0f;
+    inline constexpr float h1  = 36.0f;
+}
+
+} // namespace assistme
+
+
+========================================
+FILE: source/ui/layout/DesignGrid.h
+========================================
+#pragma once
+
+// ============================================================
+// DesignGrid.h
+// Scales design-space coordinates to screen pixels.
+//
+// All layout is authored in the design canvas (1672 x 941).
+// At runtime, DesignGrid holds the current scale factor
+// s = editorWidth / 1672.0f and converts rectangles, sizes
+// and font sizes so the UI scales proportionally from 60% to
+// 200% of the reference size.
+//
+// Usage:
+//   DesignGrid grid(getWidth(), getHeight());
+//   auto topBar = grid.rect(0, 0, 1672, 48);  // full-width top bar
+//   auto fontSize = grid.font(FontSize::md);
+// ============================================================
+
+#include "ui/theme/Tokens.h"
+#include <juce_gui_basics/juce_gui_basics.h>
+
+namespace assistme
+{
+
+class DesignGrid
+{
+public:
+    /// Construct from the current editor pixel dimensions.
+    explicit DesignGrid(int editorWidthPx, int editorHeightPx) noexcept
+        : m_scale(static_cast<float>(editorWidthPx) /
+                  static_cast<float>(Layout::DesignWidth))
+    {
+        juce::ignoreUnused(editorHeightPx);
+    }
+
+    /// Current scale factor (editorWidth / 1672).
+    float scale() const noexcept { return m_scale; }
+
+    /// Convert a design-space integer to screen pixels.
+    int px(int designUnits) const noexcept
+    {
+        return juce::roundToInt(static_cast<float>(designUnits) * m_scale);
+    }
+
+    /// Convert a design-space float to screen pixels.
+    float pxf(float designUnits) const noexcept
+    {
+        return designUnits * m_scale;
+    }
+
+    /// Convert a design-space rectangle to screen pixels.
+    juce::Rectangle<int> rect(int x, int y, int w, int h) const noexcept
+    {
+        return { px(x), px(y), px(w), px(h) };
+    }
+
+    /// Convert a design-space float rectangle to screen pixels.
+    juce::Rectangle<float> rectf(float x, float y, float w, float h) const noexcept
+    {
+        return { pxf(x), pxf(y), pxf(w), pxf(h) };
+    }
+
+    /// Scale a font size from design units to screen points.
+    float font(float designFontSize) const noexcept
+    {
+        // Clamp to a readable minimum of 9 pt regardless of scale.
+        return juce::jmax(9.0f, designFontSize * m_scale);
+    }
+
+    /// Scale a stroke width.
+    float stroke(float designStrokeWidth) const noexcept
+    {
+        return juce::jmax(0.5f, designStrokeWidth * m_scale);
+    }
+
+private:
+    float m_scale { 1.0f };
+};
+
+} // namespace assistme
+
+========================================
+FILE: source/plugin/PluginEditor.h
+========================================
+#pragma once
+
+#include "PluginProcessor.h"
+#include "ui/layout/DesignGrid.h"
+#include "core/services/MockLibraryService.h"
+#include "ui/theme/Tokens.h"
+#include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+#include <array>
+#include <memory>
+#include <vector>
+
+namespace assistme
+{
+
+class PluginEditor final : public juce::AudioProcessorEditor,
+                           private juce::ComponentListener
+{
+public:
+    explicit PluginEditor(PluginProcessor& processor);
+    ~PluginEditor() override;
+
+    void paint(juce::Graphics& g) override;
+    void resized() override;
+
+private:
+    using SliderAttachment =
+        juce::AudioProcessorValueTreeState::SliderAttachment;
+
+    void componentMovedOrResized(juce::Component&, bool, bool) override;
+    void updateSampleVisibility();
+    void sendAssistantMessage();
+    void styleButton(juce::TextButton& button);
+
+    PluginProcessor& m_processor;
+    MockLibraryService m_libraryService;
+    std::vector<SampleInfo> m_visibleSamples;
+    std::vector<juce::int64> m_recentSampleIds;
+    juce::ComponentBoundsConstrainer m_constrainer;
+
+    std::array<juce::TextButton, 4> m_tabs;
+    std::array<juce::TextButton, 4> m_navigation;
+    std::array<juce::TextButton, 6> m_sampleRows;
+    std::array<juce::Slider, 4> m_macros;
+    std::array<std::unique_ptr<SliderAttachment>, 4> m_macroAttachments;
+
+    juce::TextButton m_assistantToggle { "AI ASSISTANT" };
+    juce::TextButton m_sendButton { "SEND" };
+    juce::TextButton m_favouriteButton { "FAVOURITE" };
+    juce::TextButton m_transportButton { "PREVIEW UNAVAILABLE" };
+
+    juce::TextEditor m_search;
+    juce::TextEditor m_assistantOutput;
+    juce::TextEditor m_assistantInput;
+
+    bool m_assistantOpen { true };
+    int m_activeCategory { 0 };
+    int m_activeNavigation { 0 };
+    juce::int64 m_selectedSampleId { 0 };
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
+};
+
+} // namespace assistme
+
+
+========================================
+FILE: source/plugin/PluginEditor.cpp
+========================================
+#include "PluginEditor.h"
+#include "ui/theme/FontManager.h"
+#include <algorithm>
+
+namespace assistme
+{
+namespace
+{
+juce::Colour colour(juce::uint32 token)
+{
+    return Colours::fromToken(token);
+}
+}
+
+PluginEditor::PluginEditor(PluginProcessor& processor)
+    : AudioProcessorEditor(processor),
+      m_processor(processor)
+{
+    m_constrainer.setFixedAspectRatio(
+        static_cast<double>(Layout::DesignWidth) /
+        static_cast<double>(Layout::DesignHeight));
+
+    m_constrainer.setSizeLimits(
+        Layout::MinWidth, Layout::MinHeight,
+        Layout::MaxWidth, Layout::MaxHeight);
+
+    setConstrainer(&m_constrainer);
+    setResizable(true, true);
+
+    const int savedW = processor.getPluginState().getSavedEditorWidth();
+    const int savedH = processor.getPluginState().getSavedEditorHeight();
+
+    if (savedW >= Layout::MinWidth && savedH >= Layout::MinHeight)
+        setSize(savedW, savedH);
+    else
+        setSize(1280, 720);
+
+    m_assistantOpen =
+        processor.getPluginState().getSavedAssistantPanelOpen();
+
+    const std::array<juce::String, 4> tabNames
+    {
+        "ALL SAMPLES", "DRUMS", "LOOPS", "ONE-SHOTS"
+    };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        addAndMakeVisible(m_tabs[i]);
+        m_tabs[i].setButtonText(tabNames[static_cast<size_t>(i)]);
+        styleButton(m_tabs[i]);
+
+        m_tabs[i].onClick = [this, i]
+        {
+            m_activeCategory = i;
+            updateSampleVisibility();
+            repaint();
+        };
+    }
+
+    const std::array<juce::String, 4> navNames
+    {
+        "BROWSE", "FAVOURITES", "RECENT", "PACKS"
+    };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        addAndMakeVisible(m_navigation[i]);
+        m_navigation[i].setButtonText(navNames[static_cast<size_t>(i)]);
+        styleButton(m_navigation[i]);
+        m_navigation[i].onClick = [this, i]
+        {
+            m_activeNavigation = i;
+
+            for (int n = 0; n < 4; ++n)
+                m_navigation[n].setToggleState(
+                    n == i, juce::dontSendNotification);
+
+            updateSampleVisibility();
+            repaint();
+        };
+    }
+
+    m_navigation[0].setToggleState(true, juce::dontSendNotification);
+
+    for (int i = 0; i < 6; ++i)
+    {
+        addAndMakeVisible(m_sampleRows[i]);
+        styleButton(m_sampleRows[i]);
+
+        m_sampleRows[i].onClick = [this, i]
+        {
+            if (i >= static_cast<int>(m_visibleSamples.size()))
+                return;
+
+            m_selectedSampleId =
+                m_visibleSamples[static_cast<size_t>(i)].id;
+
+            m_recentSampleIds.erase(
+                std::remove(
+                    m_recentSampleIds.begin(),
+                    m_recentSampleIds.end(),
+                    m_selectedSampleId),
+                m_recentSampleIds.end());
+
+            m_recentSampleIds.insert(
+                m_recentSampleIds.begin(), m_selectedSampleId);
+
+            if (m_recentSampleIds.size() > 20)
+                m_recentSampleIds.resize(20);
+
+            updateSampleVisibility();
+            repaint();
+        };
+    }
+
+    const std::array<juce::String, 4> macroNames
+    {
+        "PUNCH", "SPACE", "MOVEMENT", "TONE"
+    };
+
+    const std::array<juce::String, 4> parameterIDs
+    {
+        "macro_1", "macro_2", "macro_3", "macro_4"
+    };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        addAndMakeVisible(m_macros[i]);
+
+        m_macros[i].setName(macroNames[static_cast<size_t>(i)]);
+        m_macros[i].setSliderStyle(
+            juce::Slider::RotaryHorizontalVerticalDrag);
+        m_macros[i].setTextBoxStyle(
+            juce::Slider::NoTextBox, false, 0, 0);
+        m_macros[i].setRange(0.0, 1.0, 0.01);
+        m_macros[i].setColour(
+            juce::Slider::rotarySliderFillColourId,
+            colour(Colours::Accent));
+        m_macros[i].setColour(
+            juce::Slider::rotarySliderOutlineColourId,
+            colour(Colours::Border));
+        m_macros[i].setColour(
+            juce::Slider::thumbColourId,
+            colour(Colours::TextPrimary));
+
+        m_macroAttachments[static_cast<size_t>(i)] =
+            std::make_unique<SliderAttachment>(
+                processor.getPluginState().apvts(),
+                parameterIDs[static_cast<size_t>(i)],
+                m_macros[i]);
+    }
+
+    addAndMakeVisible(m_search);
+    m_search.setTextToShowWhenEmpty(
+        "Search samples, packs and tags...",
+        colour(Colours::TextTertiary));
+    m_search.setColour(
+        juce::TextEditor::backgroundColourId,
+        colour(Colours::SurfaceSunken));
+    m_search.setColour(
+        juce::TextEditor::textColourId,
+        colour(Colours::TextPrimary));
+    m_search.setColour(
+        juce::TextEditor::outlineColourId,
+        colour(Colours::Border));
+    m_search.onTextChange = [this] { updateSampleVisibility(); };
+
+    addAndMakeVisible(m_favouriteButton);
+    styleButton(m_favouriteButton);
+
+    m_favouriteButton.onClick = [this]
+    {
+        if (m_selectedSampleId == 0)
+            return;
+
+        m_libraryService.toggleFavourite(m_selectedSampleId);
+        updateSampleVisibility();
+        repaint();
+    };
+
+    addAndMakeVisible(m_assistantToggle);
+    m_assistantToggle.setButtonText(
+        m_assistantOpen ? "AI PANEL  ON" : "AI PANEL  OFF");
+    styleButton(m_assistantToggle);
+
+    m_assistantToggle.onClick = [this]
+    {
+        m_assistantOpen = !m_assistantOpen;
+
+        m_assistantOutput.setVisible(m_assistantOpen);
+        m_assistantInput.setVisible(m_assistantOpen);
+        m_sendButton.setVisible(m_assistantOpen);
+
+        m_assistantToggle.setButtonText(
+            m_assistantOpen ? "AI PANEL  ON" : "AI PANEL  OFF");
+
+        m_processor.getPluginState().saveAssistantPanelOpen(
+            m_assistantOpen);
+
+        resized();
+        repaint();
+    };
+
+    addAndMakeVisible(m_assistantOutput);
+    m_assistantOutput.setMultiLine(true);
+    m_assistantOutput.setReadOnly(true);
+    m_assistantOutput.setScrollbarsShown(true);
+    m_assistantOutput.setColour(
+        juce::TextEditor::backgroundColourId,
+        colour(Colours::SurfaceSunken));
+    m_assistantOutput.setColour(
+        juce::TextEditor::textColourId,
+        colour(Colours::TextSecondary));
+    m_assistantOutput.setColour(
+        juce::TextEditor::outlineColourId,
+        colour(Colours::Border));
+    m_assistantOutput.setText(
+        "ASSIST ME ASSISTANT\n\n"
+        "Your production assistant workspace.\n\n"
+        "The interface is ready. The AI service has not "
+        "been connected yet.\n\n"
+        "Backend integration will be added in a later milestone.");
+
+    addAndMakeVisible(m_assistantInput);
+    m_assistantInput.setMultiLine(false);
+    m_assistantInput.setReturnKeyStartsNewLine(false);
+    m_assistantInput.setTextToShowWhenEmpty(
+        "Ask about your production...",
+        colour(Colours::TextTertiary));
+    m_assistantInput.setColour(
+        juce::TextEditor::backgroundColourId,
+        colour(Colours::SurfaceSunken));
+    m_assistantInput.setColour(
+        juce::TextEditor::textColourId,
+        colour(Colours::TextPrimary));
+    m_assistantInput.setColour(
+        juce::TextEditor::outlineColourId,
+        colour(Colours::Border));
+    m_assistantInput.onReturnKey = [this] { sendAssistantMessage(); };
+
+    addAndMakeVisible(m_sendButton);
+    styleButton(m_sendButton);
+    m_sendButton.onClick = [this] { sendAssistantMessage(); };
+
+    m_assistantOutput.setVisible(m_assistantOpen);
+    m_assistantInput.setVisible(m_assistantOpen);
+    m_sendButton.setVisible(m_assistantOpen);
+
+    addAndMakeVisible(m_transportButton);
+    styleButton(m_transportButton);
+    m_transportButton.setTooltip(
+        "Sample audio preview will be implemented in a later milestone.");
+
+    addAndMakeVisible(m_transportButton);
+
+    addAndMakeVisible(m_tabs[0]);
+    addComponentListener(this);
+
+    updateSampleVisibility();
+}
+
+PluginEditor::~PluginEditor()
+{
+    removeComponentListener(this);
+}
+
+void PluginEditor::styleButton(juce::TextButton& button)
+{
+    button.setColour(
+        juce::TextButton::buttonColourId,
+        colour(Colours::SurfaceRaised));
+    button.setColour(
+        juce::TextButton::buttonOnColourId,
+        colour(Colours::AccentDim));
+    button.setColour(
+        juce::TextButton::textColourOffId,
+        colour(Colours::TextSecondary));
+    button.setColour(
+        juce::TextButton::textColourOnId,
+        colour(Colours::TextPrimary));
+}
+
+void PluginEditor::updateSampleVisibility()
+{
+    FilterState filter;
+
+    filter.textQuery = m_search.getText().trim();
+    filter.pageIndex = 0;
+    filter.pageSize = 200;
+
+    if (m_activeCategory == 1)
+        filter.sampleType = "DRUMS";
+    else if (m_activeCategory == 2)
+        filter.sampleType = "LOOPS";
+    else if (m_activeCategory == 3)
+        filter.sampleType = "ONE-SHOTS";
+
+    filter.favouritesOnly = (m_activeNavigation == 1);
+
+    auto result = m_libraryService.query(filter);
+
+    m_visibleSamples = std::move(result.rows);
+
+    // Recent samples are tracked for this editor session.
+    if (m_activeNavigation == 2)
+    {
+        std::vector<SampleInfo> recentSamples;
+
+        for (const auto id : m_recentSampleIds)
+        {
+            const auto found = std::find_if(
+                m_visibleSamples.begin(),
+                m_visibleSamples.end(),
+                [id](const SampleInfo& sample)
+                {
+                    return sample.id == id;
+                });
+
+            if (found != m_visibleSamples.end())
+                recentSamples.push_back(*found);
+        }
+
+        m_visibleSamples = std::move(recentSamples);
+    }
+
+    for (int i = 0; i < 6; ++i)
+    {
+        auto& row = m_sampleRows[static_cast<size_t>(i)];
+
+        if (i >= static_cast<int>(m_visibleSamples.size()))
+        {
+            row.setVisible(false);
+            continue;
+        }
+
+        const auto& sample = m_visibleSamples[static_cast<size_t>(i)];
+
+        const auto bpmText = sample.bpm > 0.0f
+            ? juce::String(sample.bpm, 0) + " BPM"
+            : "N/A BPM";
+
+        const auto detail =
+            bpmText + "   " +
+            sample.musicalKey + "   " +
+            juce::String(sample.durationSeconds, 1) + "s";
+
+        const auto favouriteText =
+            sample.isFavourite ? "   [FAV]" : "";
+
+        row.setButtonText(
+            sample.title + "     " +
+            sample.sampleType + "     " +
+            detail + favouriteText);
+
+        row.setColour(
+            juce::TextButton::buttonColourId,
+            sample.id == m_selectedSampleId
+                ? colour(Colours::Selected)
+                : colour(Colours::SurfaceSunken));
+
+        row.setVisible(true);
+    }
+
+    bool selectedIsFavourite = false;
+
+    const auto selected = std::find_if(
+        m_visibleSamples.begin(),
+        m_visibleSamples.end(),
+        [this](const SampleInfo& sample)
+        {
+            return sample.id == m_selectedSampleId;
+        });
+
+    if (selected != m_visibleSamples.end())
+        selectedIsFavourite = selected->isFavourite;
+
+    m_favouriteButton.setButtonText(
+        selectedIsFavourite ? "UNFAVOURITE" : "FAVOURITE");
+
+    for (int i = 0; i < 4; ++i)
+    {
+        m_tabs[static_cast<size_t>(i)].setToggleState(
+            i == m_activeCategory,
+            juce::dontSendNotification);
+    }
+}
+
+void PluginEditor::sendAssistantMessage()
+{
+    const auto message = m_assistantInput.getText().trim();
+
+    if (message.isEmpty())
+        return;
+
+    const auto updated =
+        m_assistantOutput.getText() +
+        "\n\nYOU:\n" + message +
+        "\n\nASSIST ME:\n"
+        "The assistant backend is not connected yet. "
+        "Your message was not sent to an AI service.";
+
+    m_assistantOutput.setText(updated);
+    m_assistantInput.clear();
+}
+
+void PluginEditor::paint(juce::Graphics& g)
+{
+    const DesignGrid grid(getWidth(), getHeight());
+
+    g.fillAll(colour(Colours::Background));
+
+    const int assistantWidth =
+        m_assistantOpen ? Layout::AssistantPanelWidth : 0;
+
+    const int macroX =
+        Layout::DesignWidth - assistantWidth - Layout::MacroColumnWidth;
+
+    const int browserLeft =
+        Layout::LeftNavWidth + Layout::FilterPanelWidth;
+
+    const int browserWidth = macroX - browserLeft;
+
+    const int contentTop =
+        Layout::TopBarHeight + Layout::TabBarHeight;
+
+    const int contentBottom =
+        Layout::DesignHeight - Layout::TransportBarHeight;
+
+    const int contentHeight = contentBottom - contentTop;
+
+    // Main surfaces
+    g.setColour(colour(Colours::SurfaceRaised));
+    g.fillRect(grid.rect(0, 0, Layout::DesignWidth, Layout::TopBarHeight));
+
+    g.setColour(colour(Colours::SurfaceSunken));
+    g.fillRect(grid.rect(
+        0, Layout::TopBarHeight,
+        Layout::DesignWidth, Layout::TabBarHeight));
+
+    g.setColour(colour(Colours::SurfaceRaised));
+    g.fillRect(grid.rect(
+        0, contentTop, Layout::LeftNavWidth, contentHeight));
+
+    g.setColour(colour(Colours::SurfaceRaised));
+    g.fillRect(grid.rect(
+        Layout::LeftNavWidth, contentTop,
+        Layout::FilterPanelWidth, contentHeight));
+
+    g.setColour(colour(Colours::Background));
+    g.fillRect(grid.rect(
+        browserLeft, contentTop, browserWidth, contentHeight));
+
+    g.setColour(colour(Colours::SurfaceRaised));
+    g.fillRect(grid.rect(
+        macroX, contentTop,
+        Layout::MacroColumnWidth, contentHeight));
+
+    if (m_assistantOpen)
+    {
+        g.setColour(colour(Colours::SurfaceRaised));
+        g.fillRect(grid.rect(
+            Layout::DesignWidth - assistantWidth, contentTop,
+            assistantWidth, contentHeight));
+    }
+
+    g.setColour(colour(Colours::SurfaceRaised));
+    g.fillRect(grid.rect(
+        0, contentBottom,
+        Layout::DesignWidth, Layout::TransportBarHeight));
+
+    // Separators
+    g.setColour(colour(Colours::Border));
+    g.drawHorizontalLine(
+        grid.px(Layout::TopBarHeight), 0.0f,
+        static_cast<float>(getWidth()));
+    g.drawHorizontalLine(
+        grid.px(contentBottom), 0.0f,
+        static_cast<float>(getWidth()));
+
+    g.drawVerticalLine(
+        grid.px(Layout::LeftNavWidth),
+        static_cast<float>(grid.px(contentTop)),
+        static_cast<float>(grid.px(contentBottom)));
+
+    g.drawVerticalLine(
+        grid.px(browserLeft),
+        static_cast<float>(grid.px(contentTop)),
+        static_cast<float>(grid.px(contentBottom)));
+
+    g.drawVerticalLine(
+        grid.px(macroX),
+        static_cast<float>(grid.px(contentTop)),
+        static_cast<float>(grid.px(contentBottom)));
+
+    if (m_assistantOpen)
+        g.drawVerticalLine(
+            grid.px(Layout::DesignWidth - assistantWidth),
+            static_cast<float>(grid.px(contentTop)),
+            static_cast<float>(grid.px(contentBottom)));
+
+    // Brand
+    g.setColour(colour(Colours::Accent));
+    g.setFont(FontManager::bold(grid.font(FontSize::xl)));
+    g.drawText(
+        "ASSIST ME",
+        grid.rect(20, 5, 180, 24),
+        juce::Justification::centredLeft);
+
+    g.setColour(colour(Colours::TextSecondary));
+    g.setFont(FontManager::regular(grid.font(FontSize::xs)));
+    g.drawText(
+        "R3NOL MUSIC  /  PRODUCTION WORKSPACE",
+        grid.rect(21, 27, 350, 15),
+        juce::Justification::centredLeft);
+
+    // Filter panel
+    g.setColour(colour(Colours::TextPrimary));
+    g.setFont(FontManager::semiBold(grid.font(FontSize::md)));
+    g.drawText(
+        "LIBRARY FILTERS",
+        grid.rect(72, 104, 188, 25),
+        juce::Justification::centredLeft);
+
+    g.setColour(colour(Colours::TextSecondary));
+    g.setFont(FontManager::medium(grid.font(FontSize::sm)));
+    g.drawText(
+        "SAMPLE TYPE",
+        grid.rect(72, 148, 180, 20),
+        juce::Justification::centredLeft);
+
+    g.drawText(
+        "PACKS",
+        grid.rect(72, 295, 180, 20),
+        juce::Justification::centredLeft);
+
+    g.drawText(
+        "MUSICAL KEY",
+        grid.rect(72, 390, 180, 20),
+        juce::Justification::centredLeft);
+
+    g.drawText(
+        "TEMPO RANGE",
+        grid.rect(72, 490, 180, 20),
+        juce::Justification::centredLeft);
+
+    g.setColour(colour(Colours::TextTertiary));
+    g.drawText(
+        "Additional filters will be connected to the library service.",
+        grid.rect(72, 525, 185, 65),
+        juce::Justification::topLeft);
+
+    // Browser heading
+    g.setColour(colour(Colours::TextPrimary));
+    g.setFont(FontManager::bold(grid.font(FontSize::h2)));
+    g.drawText(
+        "Sample Browser",
+        grid.rect(browserLeft + 20, 99, browserWidth - 40, 38),
+        juce::Justification::centredLeft);
+
+    g.setColour(colour(Colours::TextSecondary));
+    g.setFont(FontManager::regular(grid.font(FontSize::sm)));
+    g.drawText(
+        "Discover, search and organise your sounds",
+        grid.rect(browserLeft + 20, 136, browserWidth - 40, 22),
+        juce::Justification::centredLeft);
+
+    g.setColour(colour(Colours::Accent));
+    g.setFont(FontManager::semiBold(grid.font(FontSize::xs)));
+    g.drawText(
+        "DEMO LIBRARY",
+        grid.rect(browserLeft + 20, 183, 130, 20),
+        juce::Justification::centredLeft);
+
+    g.setColour(colour(Colours::TextSecondary));
+    g.drawText(
+        "SAMPLE / TYPE / DETAILS",
+        grid.rect(browserLeft + 20, 207, browserWidth - 40, 20),
+        juce::Justification::centredLeft);
+
+    // Macro column
+    g.setColour(colour(Colours::TextPrimary));
+    g.setFont(FontManager::semiBold(grid.font(FontSize::xs)));
+    g.drawFittedText(
+        "MACROS",
+        grid.rect(macroX + 2, 112, Layout::MacroColumnWidth - 4, 20),
+        juce::Justification::centred, 1);
+
+    const std::array<juce::String, 4> macroNames
+    {
+        "PUNCH", "SPACE", "MOVE", "TONE"
+    };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        g.setColour(colour(Colours::TextSecondary));
+        g.setFont(FontManager::medium(grid.font(FontSize::xs)));
+        g.drawFittedText(
+            macroNames[static_cast<size_t>(i)],
+            grid.rect(macroX + 1, 190 + i * 145,
+                      Layout::MacroColumnWidth - 2, 20),
+            juce::Justification::centred, 1);
+    }
+
+    // Assistant panel
+    if (m_assistantOpen)
+    {
+        const int assistantX =
+            Layout::DesignWidth - Layout::AssistantPanelWidth;
+
+        g.setColour(colour(Colours::TextPrimary));
+        g.setFont(FontManager::semiBold(grid.font(FontSize::lg)));
+        g.drawText(
+            "AI ASSISTANT",
+            grid.rect(assistantX + 16, 103, 300, 28),
+            juce::Justification::centredLeft);
+
+        g.setColour(colour(Colours::StatusOffline));
+        g.setFont(FontManager::medium(grid.font(FontSize::xs)));
+        g.drawText(
+            "OFFLINE  /  BACKEND NOT CONNECTED",
+            grid.rect(assistantX + 16, 132, 310, 20),
+            juce::Justification::centredLeft);
+    }
+
+    // Transport
+    g.setColour(colour(Colours::TextSecondary));
+    g.setFont(FontManager::medium(grid.font(FontSize::sm)));
+    g.drawText(
+        "TRANSPORT",
+        grid.rect(180, contentBottom + 5, 120, 25),
+        juce::Justification::centredLeft);
+
+    g.setColour(colour(Colours::TextTertiary));
+    g.setFont(FontManager::regular(grid.font(FontSize::xs)));
+    g.drawText(
+        "Audio preview engine pending integration",
+        grid.rect(330, contentBottom + 5, 400, 25),
+        juce::Justification::centredLeft);
+
+    g.setColour(colour(Colours::Border));
+    g.drawRect(getLocalBounds(), 1);
+}
+
+void PluginEditor::resized()
+{
+    const DesignGrid grid(getWidth(), getHeight());
+
+    const int assistantWidth =
+        m_assistantOpen ? Layout::AssistantPanelWidth : 0;
+
+    const int macroX =
+        Layout::DesignWidth - assistantWidth - Layout::MacroColumnWidth;
+
+    const int browserLeft =
+        Layout::LeftNavWidth + Layout::FilterPanelWidth;
+
+    const int browserWidth = macroX - browserLeft;
+
+    const int assistantX =
+        Layout::DesignWidth - Layout::AssistantPanelWidth;
+
+    m_assistantToggle.setBounds(
+        grid.rect(Layout::DesignWidth - 145, 8, 130, 32));
+
+    for (int i = 0; i < 4; ++i)
+    {
+        m_tabs[i].setBounds(
+            grid.rect(browserLeft + 12 + i * 112, 51, 104, 30));
+
+        m_navigation[i].setBounds(
+            grid.rect(4, 112 + i * 66, Layout::LeftNavWidth - 8, 48));
+    }
+
+    m_search.setBounds(
+        grid.rect(browserLeft + 20, 160, browserWidth - 160, 34));
+
+    m_favouriteButton.setBounds(
+        grid.rect(browserLeft + browserWidth - 130, 160, 110, 34));
+
+    for (int i = 0; i < 6; ++i)
+    {
+        m_sampleRows[i].setBounds(
+            grid.rect(browserLeft + 16, 232 + i * 68,
+                      browserWidth - 32, 54));
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        m_macros[i].setBounds(
+            grid.rect(macroX + 5, 210 + i * 145,
+                      Layout::MacroColumnWidth - 10, 72));
+    }
+
+    if (m_assistantOpen)
+    {
+        m_assistantOutput.setBounds(
+            grid.rect(assistantX + 14, 164,
+                      Layout::AssistantPanelWidth - 28, 590));
+
+        m_assistantInput.setBounds(
+            grid.rect(assistantX + 14, 770,
+                      Layout::AssistantPanelWidth - 28, 46));
+
+        m_sendButton.setBounds(
+            grid.rect(assistantX + 14, 824,
+                      Layout::AssistantPanelWidth - 28, 34));
+    }
+
+    m_transportButton.setBounds(
+        grid.rect(16, Layout::DesignHeight -
+                  Layout::TransportBarHeight + 4, 150, 28));
+
+    updateSampleVisibility();
+}
+
+void PluginEditor::componentMovedOrResized(
+    juce::Component&, bool, bool wasResized)
+{
+    if (wasResized)
+        m_processor.getPluginState().saveEditorSize(
+            getWidth(), getHeight());
+}
+
+} // namespace assistme
+
+
+========================================
+FILE: source/ui/theme/FontManager.h
+========================================
+#pragma once
+
+#include <juce_graphics/juce_graphics.h>
+
+namespace assistme
+{
+
+class FontManager final
+{
+public:
+    static juce::Font regular(float heightPx);
+    static juce::Font medium(float heightPx);
+    static juce::Font semiBold(float heightPx);
+    static juce::Font bold(float heightPx);
+};
+
+} // namespace assistme
+
+========================================
+FILE: source/ui/theme/FontManager.cpp
+========================================
+#include "FontManager.h"
+#include "BinaryData.h"
+
+namespace assistme
+{
+namespace
+{
+
+juce::Typeface::Ptr loadTypeface(const char* data, int dataSize)
+{
+    return juce::Typeface::createSystemTypefaceFor(
+        data,
+        static_cast<size_t>(dataSize));
+}
+
+const juce::Typeface::Ptr& regularTypeface()
+{
+    static const auto typeface = loadTypeface(
+        AssistMeFonts::InterRegular_ttf,
+        AssistMeFonts::InterRegular_ttfSize);
+
+    return typeface;
+}
+
+const juce::Typeface::Ptr& mediumTypeface()
+{
+    static const auto typeface = loadTypeface(
+        AssistMeFonts::InterMedium_ttf,
+        AssistMeFonts::InterMedium_ttfSize);
+
+    return typeface;
+}
+
+const juce::Typeface::Ptr& semiBoldTypeface()
+{
+    static const auto typeface = loadTypeface(
+        AssistMeFonts::InterSemiBold_ttf,
+        AssistMeFonts::InterSemiBold_ttfSize);
+
+    return typeface;
+}
+
+const juce::Typeface::Ptr& boldTypeface()
+{
+    static const auto typeface = loadTypeface(
+        AssistMeFonts::InterBold_ttf,
+        AssistMeFonts::InterBold_ttfSize);
+
+    return typeface;
+}
+
+juce::Font makeFont(const juce::Typeface::Ptr& typeface, float heightPx)
+{
+    return juce::Font(
+        juce::FontOptions{}
+            .withTypeface(typeface)
+            .withHeight(heightPx));
+}
+
+} // namespace
+
+juce::Font FontManager::regular(float heightPx)
+{
+    return makeFont(regularTypeface(), heightPx);
+}
+
+juce::Font FontManager::medium(float heightPx)
+{
+    return makeFont(mediumTypeface(), heightPx);
+}
+
+juce::Font FontManager::semiBold(float heightPx)
+{
+    return makeFont(semiBoldTypeface(), heightPx);
+}
+
+juce::Font FontManager::bold(float heightPx)
+{
+    return makeFont(boldTypeface(), heightPx);
+}
+
+} // namespace assistme
+
+user@DESKTOP-JGBAS9B MINGW64 ~/Downloads/ASSIST-ME-UI-Audit-20261118-143831
+$
